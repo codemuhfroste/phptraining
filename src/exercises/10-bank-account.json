@@ -1,0 +1,36 @@
+{
+  "id": "10-bank-account",
+  "title": "OOP: a BankAccount class",
+  "level": "oop",
+  "prompt": "Complete the BankAccount class in the starter code:\n\n  - __construct(string $owner, float $balance = 0.0) stores both values in private properties\n  - deposit(float $amount): void  — adds to the balance\n  - withdraw(float $amount): void — subtracts from the balance\n  - getOwner(): string and getBalance(): float\n\nRules (use exceptions, not return codes):\n  - deposit/withdraw must throw new InvalidArgumentException('Amount must be positive') when $amount <= 0\n  - withdraw must throw new InvalidArgumentException('Insufficient funds') when the balance is too low\n\nThe tests call the runAccount() wrapper at the bottom of the starter code. It is already complete — leave it as is.",
+  "starterCode": "<?php\n// Exercise 10: Classes, constructors, methods and exceptions\n\nclass BankAccount\n{\n    // TODO: private properties for the owner and the balance\n\n    public function __construct(string $owner, float $balance = 0.0)\n    {\n        // TODO: store the constructor arguments\n    }\n\n    public function deposit(float $amount): void\n    {\n        // TODO: validate, then add to the balance\n    }\n\n    public function withdraw(float $amount): void\n    {\n        // TODO: validate amount, check funds, then subtract\n    }\n\n    public function getOwner(): string\n    {\n        return '';\n    }\n\n    public function getBalance(): float\n    {\n        return 0.0;\n    }\n}\n\n// ---- Test wrapper (complete, do not change) ----\n// Applies a list of [action, amount] operations and reports the outcome.\nfunction runAccount(string $owner, array $operations): array\n{\n    $account = new BankAccount($owner);\n    $errors = [];\n\n    foreach ($operations as [$action, $amount]) {\n        try {\n            match ($action) {\n                'deposit'  => $account->deposit($amount),\n                'withdraw' => $account->withdraw($amount),\n            };\n        } catch (InvalidArgumentException $e) {\n            $errors[] = $e->getMessage();\n        }\n    }\n\n    return [\n        'owner'   => $account->getOwner(),\n        'balance' => $account->getBalance(),\n        'errors'  => $errors,\n    ];\n}\n",
+  "functionName": "runAccount",
+  "hints": [
+    "Declare properties at the top of the class: private string $owner; private float $balance; and assign them in the constructor with $this->owner = $owner;.",
+    "Both deposit and withdraw start with: if ($amount <= 0) { throw new InvalidArgumentException('Amount must be positive'); }",
+    "In withdraw, after the amount check: if ($amount > $this->balance) { throw new InvalidArgumentException('Insufficient funds'); }. The exact messages matter — the wrapper collects them."
+  ],
+  "tests": [
+    {
+      "input": ["Ana", [["deposit", 100], ["withdraw", 30]]],
+      "expected": { "owner": "Ana", "balance": 70, "errors": [] }
+    },
+    {
+      "input": ["Bob", [["withdraw", 10]]],
+      "expected": { "owner": "Bob", "balance": 0, "errors": ["Insufficient funds"] }
+    },
+    {
+      "input": ["Cy", [["deposit", -5], ["deposit", 20], ["withdraw", 0]]],
+      "expected": { "owner": "Cy", "balance": 20, "errors": ["Amount must be positive", "Amount must be positive"] }
+    },
+    {
+      "input": ["Dee", [["deposit", 50], ["withdraw", 50], ["withdraw", 1]]],
+      "expected": { "owner": "Dee", "balance": 0, "errors": ["Insufficient funds"] }
+    },
+    {
+      "input": ["Eli", [["deposit", 12.5], ["deposit", 7.25]]],
+      "expected": { "owner": "Eli", "balance": 19.75, "errors": [] }
+    }
+  ],
+  "solution": "<?php\nclass BankAccount\n{\n    private string $owner;\n    private float $balance;\n\n    public function __construct(string $owner, float $balance = 0.0)\n    {\n        $this->owner = $owner;\n        $this->balance = $balance;\n    }\n\n    public function deposit(float $amount): void\n    {\n        $this->assertPositive($amount);\n        $this->balance += $amount;\n    }\n\n    public function withdraw(float $amount): void\n    {\n        $this->assertPositive($amount);\n        if ($amount > $this->balance) {\n            throw new InvalidArgumentException('Insufficient funds');\n        }\n        $this->balance -= $amount;\n    }\n\n    public function getOwner(): string\n    {\n        return $this->owner;\n    }\n\n    public function getBalance(): float\n    {\n        return $this->balance;\n    }\n\n    private function assertPositive(float $amount): void\n    {\n        if ($amount <= 0) {\n            throw new InvalidArgumentException('Amount must be positive');\n        }\n    }\n}\n\nfunction runAccount(string $owner, array $operations): array\n{\n    $account = new BankAccount($owner);\n    $errors = [];\n\n    foreach ($operations as [$action, $amount]) {\n        try {\n            match ($action) {\n                'deposit'  => $account->deposit($amount),\n                'withdraw' => $account->withdraw($amount),\n            };\n        } catch (InvalidArgumentException $e) {\n            $errors[] = $e->getMessage();\n        }\n    }\n\n    return [\n        'owner'   => $account->getOwner(),\n        'balance' => $account->getBalance(),\n        'errors'  => $errors,\n    ];\n}\n"
+}

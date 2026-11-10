@@ -1,0 +1,51 @@
+{
+  "id": "07-group-by",
+  "title": "Arrays: group rows by a key",
+  "level": "arrays",
+  "prompt": "Write groupBy(array $items, string $key): array. $items is a list of associative arrays (think rows from a database). Return an associative array whose keys are the distinct values of $key and whose values are the lists of items that share that value, in their original order. Every item has the key.\n\n  groupBy([\n    ['name' => 'apple',  'type' => 'fruit'],\n    ['name' => 'carrot', 'type' => 'veg'],\n    ['name' => 'pear',   'type' => 'fruit'],\n  ], 'type')\n  →\n  [\n    'fruit' => [['name' => 'apple', 'type' => 'fruit'], ['name' => 'pear', 'type' => 'fruit']],\n    'veg'   => [['name' => 'carrot', 'type' => 'veg']],\n  ]",
+  "starterCode": "<?php\n// Exercise 7: Arrays\n// Group a list of rows by the value of one key.\n\nfunction groupBy(array $items, string $key): array\n{\n    $groups = [];\n    // TODO: foreach item, append it to $groups[<value of $key>]\n    return $groups;\n}\n",
+  "functionName": "groupBy",
+  "hints": [
+    "Loop with foreach ($items as $item) and read the group name with $item[$key].",
+    "You can append to a nested array that doesn't exist yet: $groups[$item[$key]][] = $item; PHP creates it for you.",
+    "No need for array_key_exists() checks — the [] append syntax handles the first item of each group."
+  ],
+  "tests": [
+    {
+      "input": [
+        [
+          { "name": "apple", "type": "fruit" },
+          { "name": "carrot", "type": "veg" },
+          { "name": "pear", "type": "fruit" }
+        ],
+        "type"
+      ],
+      "expected": {
+        "fruit": [
+          { "name": "apple", "type": "fruit" },
+          { "name": "pear", "type": "fruit" }
+        ],
+        "veg": [{ "name": "carrot", "type": "veg" }]
+      }
+    },
+    {
+      "input": [
+        [
+          { "city": "Legazpi", "who": "Ana" },
+          { "city": "Naga", "who": "Bob" },
+          { "city": "Legazpi", "who": "Cy" }
+        ],
+        "city"
+      ],
+      "expected": {
+        "Legazpi": [
+          { "city": "Legazpi", "who": "Ana" },
+          { "city": "Legazpi", "who": "Cy" }
+        ],
+        "Naga": [{ "city": "Naga", "who": "Bob" }]
+      }
+    },
+    { "input": [[], "type"], "expected": [] }
+  ],
+  "solution": "<?php\nfunction groupBy(array $items, string $key): array\n{\n    $groups = [];\n    foreach ($items as $item) {\n        $groups[$item[$key]][] = $item;\n    }\n    return $groups;\n}\n"
+}

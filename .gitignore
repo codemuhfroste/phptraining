@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Vite / tooling caches
+.vite/
+*.log
+npm-debug.log*
+
+# Editor and OS noise
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Vercel local metadata
+.vercel/

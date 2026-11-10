@@ -1,0 +1,23 @@
+{
+  "id": "08-slugify",
+  "title": "Functions: default parameters (slugify)",
+  "level": "functions",
+  "prompt": "Write makeSlug(string $title, string $separator = '-', int $maxLength = 0): string that turns a title into a URL slug:\n\n  1. lowercase everything\n  2. replace every run of characters that are not a–z or 0–9 with ONE separator\n  3. remove separators from the start and end\n  4. if $maxLength > 0, cut the slug to at most $maxLength characters, then remove any trailing separator again\n\n  makeSlug(\"Hello World\")            → \"hello-world\"\n  makeSlug(\"Hello World\", \"_\")       → \"hello_world\"\n  makeSlug(\"  PHP  is   Fun!! \")     → \"php-is-fun\"\n  makeSlug(\"PHP is Fun\", \"-\", 7)     → \"php-is\"   (\"php-is-\" after cutting, then trimmed)",
+  "starterCode": "<?php\n// Exercise 8: Functions with default parameters\n// Callers may pass 1, 2 or 3 arguments.\n\nfunction makeSlug(string $title, string $separator = '-', int $maxLength = 0): string\n{\n    // TODO: lowercase, collapse non-alphanumerics, trim, optional cut\n    return \"\";\n}\n",
+  "functionName": "makeSlug",
+  "hints": [
+    "preg_replace('/[^a-z0-9]+/', $separator, $slug) replaces every run of unwanted characters with one separator. Do strtolower() first.",
+    "trim($slug, $separator) removes the separator from both ends; rtrim() only from the end.",
+    "substr($slug, 0, $maxLength) cuts the string. Only do it when $maxLength > 0, then rtrim again."
+  ],
+  "tests": [
+    { "input": ["Hello World"], "expected": "hello-world" },
+    { "input": ["Hello World", "_"], "expected": "hello_world" },
+    { "input": ["  PHP  is   Fun!! "], "expected": "php-is-fun" },
+    { "input": ["PHP is Fun", "-", 6], "expected": "php-is" },
+    { "input": ["PHP is Fun", "-", 7], "expected": "php-is" },
+    { "input": ["Already-a-slug"], "expected": "already-a-slug" },
+    { "input": ["Bicol University: BSIT 4th Year", "_", 0], "expected": "bicol_university_bsit_4th_year" }
+  ],
+  "solution": "<?php\nfunction makeSlug(string $title, string $separator = '-', int $maxLength = 0): string\n{\n    $slug = strtolower($title);\n    $slug = preg_replace('/[^a-z0-9]+/', $separator, $slug);\n    $slug = trim($slug, $separator);\n\n    if ($maxLength > 0) {\n        $slug = substr($slug, 0, $maxLength);\n        $slug = rtrim($slug, $separator);\n    }\n\n    return $slug;\n}\n"
+}

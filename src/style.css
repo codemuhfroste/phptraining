@@ -1,0 +1,272 @@
+/* ==========================================================================
+   PHP Terminal Trainer — styles
+   A dark, monospace, full-screen terminal plus an optional editor panel.
+   ========================================================================== */
+
+:root {
+  --bg: #0c0f14;
+  --bg-panel: #11151c;
+  --border: #262c38;
+  --fg: #d6dde6;
+  --dim: #6f7a8a;
+  --green: #4ade80;
+  --red: #f87171;
+  --yellow: #fbbf24;
+  --cyan: #67e8f9;
+  --font: ui-monospace, "Cascadia Code", "JetBrains Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 15px;
+}
+
+/* 16px on phones prevents iOS from zooming in when the input gets focus. */
+@media (max-width: 600px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+}
+
+/* Terminal and editor share the viewport: stacked on phones, side by side
+   on wide screens. `dvh` tracks the on-screen keyboard on mobile. */
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+@media (min-width: 900px) {
+  body {
+    flex-direction: row;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Terminal
+   -------------------------------------------------------------------------- */
+
+#terminal {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#screen {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 12px 14px 20px;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--border) transparent;
+}
+
+#output .line {
+  margin: 0;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Colour kinds used by Terminal.print(text, kind) */
+.line.sys {
+  color: var(--dim);
+}
+.line.ok {
+  color: var(--green);
+}
+.line.err {
+  color: var(--red);
+}
+.line.hint {
+  color: var(--yellow);
+}
+.line.cmd {
+  color: var(--fg);
+}
+.line.banner {
+  color: var(--green);
+  white-space: pre;
+  overflow-x: hidden;
+  line-height: 1.15;
+}
+
+@media (max-width: 600px) {
+  .line.banner {
+    font-size: 9px;
+  }
+}
+
+/* Inline spans produced by Terminal.printRich() */
+.seg.ok {
+  color: var(--green);
+}
+.seg.err {
+  color: var(--red);
+}
+.seg.hint {
+  color: var(--yellow);
+}
+.seg.sys {
+  color: var(--dim);
+}
+.seg.cyan {
+  color: var(--cyan);
+}
+
+/* --------------------------------------------------------------------------
+   Input row (prompt + growing textarea)
+   -------------------------------------------------------------------------- */
+
+#input-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5ch;
+}
+
+.prompt {
+  color: var(--cyan);
+  white-space: nowrap;
+  line-height: 1.45;
+  user-select: none;
+}
+
+#input {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  resize: none;
+  background: transparent;
+  color: var(--fg);
+  font: inherit;
+  line-height: 1.45;
+  caret-color: var(--green);
+  overflow: hidden;
+}
+
+/* While PHP is running, the prompt is dimmed and typing is paused. */
+#terminal.busy #input-row {
+  opacity: 0.45;
+}
+
+/* --------------------------------------------------------------------------
+   Editor panel
+   -------------------------------------------------------------------------- */
+
+#editor-panel {
+  flex: 0 0 55%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  background: var(--bg-panel);
+  border-top: 1px solid var(--border);
+}
+
+#editor-panel[hidden] {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  #editor-panel {
+    flex-basis: 50%;
+    border-top: 0;
+    border-left: 1px solid var(--border);
+  }
+}
+
+.editor-header,
+.editor-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  color: var(--dim);
+}
+
+.editor-header {
+  border-bottom: 1px solid var(--border);
+}
+
+.editor-footer {
+  border-top: 1px solid var(--border);
+}
+
+#editor-title {
+  color: var(--cyan);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.editor-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.editor-actions button {
+  font: inherit;
+  font-size: 0.85rem;
+  color: var(--fg);
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 3px 9px;
+  cursor: pointer;
+}
+
+.editor-actions button:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+
+.editor-actions button[hidden] {
+  display: none;
+}
+
+#editor-run {
+  color: var(--green);
+}
+
+#editor-submit {
+  color: var(--yellow);
+}
+
+#editor-host {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* CodeMirror fills the host and scrolls internally. */
+#editor-host .cm-editor {
+  height: 100%;
+  font-size: 0.95rem;
+}
+
+#editor-host .cm-scroller {
+  overflow: auto;
+  font-family: var(--font);
+}

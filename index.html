@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!--
+      interactive-widget=resizes-content makes the on-screen keyboard on
+      Android shrink the layout instead of covering the input row.
+    -->
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content"
+    />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0c0f14" />
+    <meta name="description" content="Practice real PHP in a fake terminal, right in your browser." />
+    <title>PHP Terminal Trainer</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230c0f14'/%3E%3Ctext x='4' y='23' font-family='monospace' font-size='18' fill='%234ade80'%3E%3E_%3C/text%3E%3C/svg%3E"
+    />
+  </head>
+  <body>
+    <!-- The fake shell. Everything inside #screen scrolls together. -->
+    <main id="terminal" aria-label="PHP terminal">
+      <div id="screen">
+        <div id="output" role="log" aria-live="polite"></div>
+        <div id="input-row">
+          <span id="prompt" class="prompt">jm@php-trainer:~$</span>
+          <textarea
+            id="input"
+            rows="1"
+            spellcheck="false"
+            autocapitalize="off"
+            autocorrect="off"
+            autocomplete="off"
+            aria-label="Terminal input"
+          ></textarea>
+        </div>
+      </div>
+    </main>
+
+    <!-- Larger code editor, toggled with the `edit` command. -->
+    <section id="editor-panel" hidden aria-label="Code editor">
+      <header class="editor-header">
+        <span id="editor-title">editor</span>
+        <div class="editor-actions">
+          <button type="button" id="editor-run" title="Run in the REPL (Ctrl+Enter)">▶ Run</button>
+          <button type="button" id="editor-submit" title="Run the exercise tests (Ctrl+Enter)">✓ Submit</button>
+          <button type="button" id="editor-close" title="Close (Esc)">✕</button>
+        </div>
+      </header>
+      <div id="editor-host"></div>
+      <footer class="editor-footer">Ctrl+Enter = run / submit &nbsp;·&nbsp; Esc = close</footer>
+    </section>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

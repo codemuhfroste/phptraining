@@ -1,0 +1,55 @@
+{
+  "id": "11-validate-form",
+  "title": "Practical: validate & sanitize form input",
+  "level": "practical",
+  "prompt": "Write validateRegistration(array $input): array. $input looks like $_POST from a sign-up form: string values under the keys name, email and age (a missing key counts as an empty string).\n\nSanitize:\n  - name:  trim()\n  - email: trim() then strtolower()\n  - age:   trim(); if it consists only of digits convert it to an int, otherwise use null\n\nValidate (exact messages):\n  - name must be 2–50 characters       → 'Name must be between 2 and 50 characters'\n  - email must pass filter_var(..., FILTER_VALIDATE_EMAIL) → 'Invalid email address'\n  - age must be an int from 13 to 120   → 'Age must be a whole number between 13 and 120'\n\nReturn:\n  [\n    'valid'  => bool,\n    'data'   => ['name' => ..., 'email' => ..., 'age' => int|null],   // the sanitized values\n    'errors' => ['field' => 'message', ...],                           // empty array when valid\n  ]",
+  "starterCode": "<?php\n// Exercise 11: Validate and sanitize form-like input\n\nfunction validateRegistration(array $input): array\n{\n    // 1. Sanitize (missing keys -> '')\n    $name = '';\n    $email = '';\n    $age = null;\n\n    // 2. Validate into $errors['field'] = 'message'\n    $errors = [];\n\n    // 3. Return the structure described in the prompt\n    return [\n        'valid'  => false,\n        'data'   => ['name' => $name, 'email' => $email, 'age' => $age],\n        'errors' => $errors,\n    ];\n}\n",
+  "functionName": "validateRegistration",
+  "hints": [
+    "The null-coalescing operator handles missing keys: trim($input['name'] ?? '').",
+    "ctype_digit($ageString) is true only for a non-empty string of digits; then (int) $ageString converts it. Otherwise set $age = null.",
+    "filter_var($email, FILTER_VALIDATE_EMAIL) returns false for invalid addresses. 'valid' is simply $errors === [] (or empty($errors))."
+  ],
+  "tests": [
+    {
+      "input": [{ "name": "  Ana Cruz ", "email": "ANA@Example.com", "age": "21" }],
+      "expected": {
+        "valid": true,
+        "data": { "name": "Ana Cruz", "email": "ana@example.com", "age": 21 },
+        "errors": []
+      }
+    },
+    {
+      "input": [{ "name": "A", "email": "not-an-email", "age": "12" }],
+      "expected": {
+        "valid": false,
+        "data": { "name": "A", "email": "not-an-email", "age": 12 },
+        "errors": {
+          "name": "Name must be between 2 and 50 characters",
+          "email": "Invalid email address",
+          "age": "Age must be a whole number between 13 and 120"
+        }
+      }
+    },
+    {
+      "input": [{ "name": "Bob", "email": "bob@site.org", "age": "twenty" }],
+      "expected": {
+        "valid": false,
+        "data": { "name": "Bob", "email": "bob@site.org", "age": null },
+        "errors": { "age": "Age must be a whole number between 13 and 120" }
+      }
+    },
+    {
+      "input": [{ "email": "x@y.com" }],
+      "expected": {
+        "valid": false,
+        "data": { "name": "", "email": "x@y.com", "age": null },
+        "errors": {
+          "name": "Name must be between 2 and 50 characters",
+          "age": "Age must be a whole number between 13 and 120"
+        }
+      }
+    }
+  ],
+  "solution": "<?php\nfunction validateRegistration(array $input): array\n{\n    // Sanitize\n    $name = trim($input['name'] ?? '');\n    $email = strtolower(trim($input['email'] ?? ''));\n    $ageRaw = trim($input['age'] ?? '');\n    $age = ctype_digit($ageRaw) ? (int) $ageRaw : null;\n\n    // Validate\n    $errors = [];\n\n    $length = strlen($name);\n    if ($length < 2 || $length > 50) {\n        $errors['name'] = 'Name must be between 2 and 50 characters';\n    }\n\n    if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {\n        $errors['email'] = 'Invalid email address';\n    }\n\n    if ($age === null || $age < 13 || $age > 120) {\n        $errors['age'] = 'Age must be a whole number between 13 and 120';\n    }\n\n    return [\n        'valid'  => $errors === [],\n        'data'   => ['name' => $name, 'email' => $email, 'age' => $age],\n        'errors' => $errors,\n    ];\n}\n"
+}

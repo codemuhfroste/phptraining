@@ -1,0 +1,19 @@
+{
+  "id": "01-greeting",
+  "title": "Variables & string interpolation",
+  "level": "basics",
+  "prompt": "Write greet(string $name, int $age): string that returns exactly:\n\n  Hello, NAME! You are AGE years old. Next year you'll be AGE+1.\n\nExample: greet(\"Ana\", 21) returns\n  Hello, Ana! You are 21 years old. Next year you'll be 22.\n\nUse variables and string interpolation (double quotes) rather than many concatenations.",
+  "starterCode": "<?php\n// Exercise 1: Variables & string interpolation\n// Build and return the greeting described in the prompt.\n\nfunction greet(string $name, int $age): string\n{\n    // TODO: compute next year's age, then interpolate both into the message\n    return \"\";\n}\n",
+  "functionName": "greet",
+  "hints": [
+    "Double-quoted strings interpolate variables: \"Hi $name\" becomes Hi Ana. Single quotes do not.",
+    "Wrap variables in curly braces to be safe when text follows them directly: \"{$age}\" or \"{$name}!\".",
+    "Store $age + 1 in a variable first (e.g. $nextYear) and interpolate that; you can't do math inside the string."
+  ],
+  "tests": [
+    { "input": ["Ana", 21], "expected": "Hello, Ana! You are 21 years old. Next year you'll be 22." },
+    { "input": ["Bob", 30], "expected": "Hello, Bob! You are 30 years old. Next year you'll be 31." },
+    { "input": ["JM", 0], "expected": "Hello, JM! You are 0 years old. Next year you'll be 1." }
+  ],
+  "solution": "<?php\nfunction greet(string $name, int $age): string\n{\n    $nextYear = $age + 1;\n    return \"Hello, {$name}! You are {$age} years old. Next year you'll be {$nextYear}.\";\n}\n"
+}

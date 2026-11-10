@@ -1,0 +1,20 @@
+{
+  "id": "03-fizzbuzz",
+  "title": "Loops: FizzBuzz as an array",
+  "level": "basics",
+  "prompt": "Write fizzBuzz(int $n): array that returns an array with one entry for each number from 1 to $n:\n\n  - multiples of 3 and 5 → \"FizzBuzz\"\n  - multiples of 3       → \"Fizz\"\n  - multiples of 5       → \"Buzz\"\n  - anything else        → the number itself (as an int, not a string)\n\nfizzBuzz(5) returns [1, 2, \"Fizz\", 4, \"Buzz\"]. fizzBuzz(0) returns [].",
+  "starterCode": "<?php\n// Exercise 3: Loops\n// Build the FizzBuzz list from 1 to $n and return it.\n\nfunction fizzBuzz(int $n): array\n{\n    $result = [];\n    // TODO: for ($i = 1; $i <= $n; $i++) { ... }\n    return $result;\n}\n",
+  "functionName": "fizzBuzz",
+  "hints": [
+    "The modulo operator % gives the remainder: $i % 3 === 0 means divisible by 3.",
+    "Check the 'both' case first (divisible by 15), otherwise 15 would be labelled Fizz.",
+    "Append to an array with $result[] = $value; — numbers must stay ints, so append $i itself, not \"$i\"."
+  ],
+  "tests": [
+    { "input": [5], "expected": [1, 2, "Fizz", 4, "Buzz"] },
+    { "input": [15], "expected": [1, 2, "Fizz", 4, "Buzz", "Fizz", 7, 8, "Fizz", "Buzz", 11, "Fizz", 13, 14, "FizzBuzz"] },
+    { "input": [3], "expected": [1, 2, "Fizz"] },
+    { "input": [0], "expected": [] }
+  ],
+  "solution": "<?php\nfunction fizzBuzz(int $n): array\n{\n    $result = [];\n    for ($i = 1; $i <= $n; $i++) {\n        if ($i % 15 === 0) {\n            $result[] = 'FizzBuzz';\n        } elseif ($i % 3 === 0) {\n            $result[] = 'Fizz';\n        } elseif ($i % 5 === 0) {\n            $result[] = 'Buzz';\n        } else {\n            $result[] = $i;\n        }\n    }\n    return $result;\n}\n"
+}

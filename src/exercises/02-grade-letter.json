@@ -1,0 +1,24 @@
+{
+  "id": "02-grade-letter",
+  "title": "Conditionals: grade letter",
+  "level": "basics",
+  "prompt": "Write gradeLetter(int $score): string that converts a 0–100 score to a letter:\n\n  90–100 → \"A\"    80–89 → \"B\"    70–79 → \"C\"    60–69 → \"D\"    0–59 → \"F\"\n\nIf the score is below 0 or above 100, return \"Invalid\".",
+  "starterCode": "<?php\n// Exercise 2: Conditionals\n// Map a score to a letter grade. Handle invalid scores first.\n\nfunction gradeLetter(int $score): string\n{\n    // TODO: if / elseif / else (or match) chain\n    return \"\";\n}\n",
+  "functionName": "gradeLetter",
+  "hints": [
+    "Check the invalid range first (score < 0 || score > 100) and return early.",
+    "An if / elseif chain from the highest grade down works: if ($score >= 90) ... elseif ($score >= 80) ...",
+    "PHP 8 alternative: match(true) { $score >= 90 => 'A', $score >= 80 => 'B', ..., default => 'F' }."
+  ],
+  "tests": [
+    { "input": [95], "expected": "A" },
+    { "input": [90], "expected": "A" },
+    { "input": [85], "expected": "B" },
+    { "input": [72], "expected": "C" },
+    { "input": [60], "expected": "D" },
+    { "input": [59], "expected": "F" },
+    { "input": [-1], "expected": "Invalid" },
+    { "input": [101], "expected": "Invalid" }
+  ],
+  "solution": "<?php\nfunction gradeLetter(int $score): string\n{\n    if ($score < 0 || $score > 100) {\n        return 'Invalid';\n    }\n\n    return match (true) {\n        $score >= 90 => 'A',\n        $score >= 80 => 'B',\n        $score >= 70 => 'C',\n        $score >= 60 => 'D',\n        default      => 'F',\n    };\n}\n"
+}

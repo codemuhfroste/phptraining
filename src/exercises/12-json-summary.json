@@ -1,0 +1,55 @@
+{
+  "id": "12-json-summary",
+  "title": "Practical: parse JSON and summarise orders",
+  "level": "practical",
+  "prompt": "Write summarizeOrders(string $json): array. $json is a JSON array of orders; each order looks like\n\n  {\"id\": 1, \"customer\": \"ana\", \"status\": \"paid\", \"items\": [{\"name\": \"pen\", \"price\": 1.5, \"qty\": 2}]}\n\nReturn:\n  [\n    'orderCount'   => number of orders,\n    'totalRevenue' => sum of price * qty over the items of orders whose status is 'paid', rounded to 2 decimals,\n    'topCustomer'  => the customer with the highest paid total (null if there are no paid orders; ties go to the first seen),\n    'statusCounts' => ['paid' => 3, 'pending' => 1, ...]  (how many orders have each status),\n  ]\n\nIf $json is not valid JSON or does not decode to an array, return ['error' => 'Invalid JSON'].",
+  "starterCode": "<?php\n// Exercise 12: Parse JSON and build a summary\n\nfunction summarizeOrders(string $json): array\n{\n    $orders = json_decode($json, true);\n    // TODO: handle invalid JSON\n\n    $totalRevenue = 0;\n    $spendByCustomer = [];\n    $statusCounts = [];\n\n    // TODO: loop over the orders\n\n    return [\n        'orderCount'   => 0,\n        'totalRevenue' => 0.0,\n        'topCustomer'  => null,\n        'statusCounts' => $statusCounts,\n    ];\n}\n",
+  "functionName": "summarizeOrders",
+  "hints": [
+    "json_decode($json, true) returns associative arrays (not objects) and null on invalid JSON. Check with !is_array($orders).",
+    "Count statuses with $statusCounts[$status] = ($statusCounts[$status] ?? 0) + 1; and accumulate per-customer spend the same way, but only for paid orders.",
+    "To find the top customer, loop over $spendByCustomer keeping the best so far; use > (not >=) so the first customer wins ties. Finish with round($totalRevenue, 2)."
+  ],
+  "tests": [
+    {
+      "input": [
+        "[{\"id\":1,\"customer\":\"ana\",\"status\":\"paid\",\"items\":[{\"name\":\"pen\",\"price\":1.5,\"qty\":2},{\"name\":\"notebook\",\"price\":4.25,\"qty\":1}]},{\"id\":2,\"customer\":\"bob\",\"status\":\"pending\",\"items\":[{\"name\":\"bag\",\"price\":30,\"qty\":1}]},{\"id\":3,\"customer\":\"ana\",\"status\":\"paid\",\"items\":[{\"name\":\"ink\",\"price\":2.75,\"qty\":4}]},{\"id\":4,\"customer\":\"cy\",\"status\":\"paid\",\"items\":[{\"name\":\"laptop\",\"price\":500,\"qty\":1}]},{\"id\":5,\"customer\":\"bob\",\"status\":\"cancelled\",\"items\":[]}]"
+      ],
+      "expected": {
+        "orderCount": 5,
+        "totalRevenue": 518.25,
+        "topCustomer": "cy",
+        "statusCounts": { "paid": 3, "pending": 1, "cancelled": 1 }
+      }
+    },
+    {
+      "input": [
+        "[{\"id\":1,\"customer\":\"ana\",\"status\":\"paid\",\"items\":[{\"name\":\"pen\",\"price\":10,\"qty\":1}]},{\"id\":2,\"customer\":\"bob\",\"status\":\"paid\",\"items\":[{\"name\":\"pen\",\"price\":5,\"qty\":2}]}]"
+      ],
+      "expected": {
+        "orderCount": 2,
+        "totalRevenue": 20,
+        "topCustomer": "ana",
+        "statusCounts": { "paid": 2 }
+      }
+    },
+    {
+      "input": ["[{\"id\":1,\"customer\":\"ana\",\"status\":\"pending\",\"items\":[{\"name\":\"pen\",\"price\":1,\"qty\":1}]}]"],
+      "expected": {
+        "orderCount": 1,
+        "totalRevenue": 0,
+        "topCustomer": null,
+        "statusCounts": { "pending": 1 }
+      }
+    },
+    {
+      "input": ["[]"],
+      "expected": { "orderCount": 0, "totalRevenue": 0, "topCustomer": null, "statusCounts": [] }
+    },
+    {
+      "input": ["{\"oops\""],
+      "expected": { "error": "Invalid JSON" }
+    }
+  ],
+  "solution": "<?php\nfunction summarizeOrders(string $json): array\n{\n    $orders = json_decode($json, true);\n    if (!is_array($orders)) {\n        return ['error' => 'Invalid JSON'];\n    }\n\n    $totalRevenue = 0;\n    $spendByCustomer = [];\n    $statusCounts = [];\n\n    foreach ($orders as $order) {\n        $status = $order['status'];\n        $statusCounts[$status] = ($statusCounts[$status] ?? 0) + 1;\n\n        if ($status !== 'paid') {\n            continue;\n        }\n\n        $orderTotal = 0;\n        foreach ($order['items'] as $item) {\n            $orderTotal += $item['price'] * $item['qty'];\n        }\n\n        $totalRevenue += $orderTotal;\n        $customer = $order['customer'];\n        $spendByCustomer[$customer] = ($spendByCustomer[$customer] ?? 0) + $orderTotal;\n    }\n\n    $topCustomer = null;\n    $topSpend = -1;\n    foreach ($spendByCustomer as $customer => $spend) {\n        if ($spend > $topSpend) {\n            $topSpend = $spend;\n            $topCustomer = $customer;\n        }\n    }\n\n    return [\n        'orderCount'   => count($orders),\n        'totalRevenue' => round($totalRevenue, 2),\n        'topCustomer'  => $topCustomer,\n        'statusCounts' => $statusCounts,\n    ];\n}\n"
+}

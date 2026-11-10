@@ -1,0 +1,21 @@
+{
+  "id": "09-flatten",
+  "title": "Functions: recursion (flatten)",
+  "level": "functions",
+  "prompt": "Write flatten(array $nested): array that turns an array nested to any depth into a flat list, preserving order.\n\n  flatten([1, [2, [3, [4]]], 5]) → [1, 2, 3, 4, 5]\n  flatten([[[]]]) → []\n\nSolve it with recursion: the function should call itself for every element that is an array.",
+  "starterCode": "<?php\n// Exercise 9: Recursion\n// Flatten an arbitrarily nested array into a single list.\n\nfunction flatten(array $nested): array\n{\n    $flat = [];\n    // TODO: foreach item: if it is an array, flatten it and merge; otherwise append it\n    return $flat;\n}\n",
+  "functionName": "flatten",
+  "hints": [
+    "is_array($item) tells you whether you need to recurse.",
+    "For a nested array: $flat = array_merge($flat, flatten($item)); — the recursive call returns an already-flat list.",
+    "For a plain value: $flat[] = $item;. The base case is an array with no nested arrays — the loop simply never recurses."
+  ],
+  "tests": [
+    { "input": [[1, [2, [3, [4]]], 5]], "expected": [1, 2, 3, 4, 5] },
+    { "input": [[[1, 2], [3], 4]], "expected": [1, 2, 3, 4] },
+    { "input": [["a", ["b", ["c"]]]], "expected": ["a", "b", "c"] },
+    { "input": [[[[]]]], "expected": [] },
+    { "input": [[]], "expected": [] }
+  ],
+  "solution": "<?php\nfunction flatten(array $nested): array\n{\n    $flat = [];\n    foreach ($nested as $item) {\n        if (is_array($item)) {\n            $flat = array_merge($flat, flatten($item));\n        } else {\n            $flat[] = $item;\n        }\n    }\n    return $flat;\n}\n"
+}

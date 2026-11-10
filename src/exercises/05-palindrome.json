@@ -1,0 +1,23 @@
+{
+  "id": "05-palindrome",
+  "title": "Strings: palindrome check",
+  "level": "strings",
+  "prompt": "Write isPalindrome(string $text): bool. A palindrome reads the same forwards and backwards when you ignore letter case and every character that is not a letter or a digit.\n\n  isPalindrome(\"Racecar\") → true\n  isPalindrome(\"A man, a plan, a canal: Panama\") → true\n  isPalindrome(\"hello\") → false\n  isPalindrome(\"\") → true (nothing to compare)",
+  "starterCode": "<?php\n// Exercise 5: Strings\n// Normalise the text, then compare it with its reverse.\n\nfunction isPalindrome(string $text): bool\n{\n    // TODO: keep only letters and digits, lowercase, compare with strrev()\n    return false;\n}\n",
+  "functionName": "isPalindrome",
+  "hints": [
+    "strtolower() handles the case. For the cleanup, a regex is easiest: preg_replace('/[^a-z0-9]/i', '', $text) removes everything else.",
+    "After cleaning, the check is a one-liner: $clean === strrev($clean).",
+    "Use === (strict comparison) so the function really returns a bool."
+  ],
+  "tests": [
+    { "input": ["Racecar"], "expected": true },
+    { "input": ["A man, a plan, a canal: Panama"], "expected": true },
+    { "input": ["No 'x' in Nixon"], "expected": true },
+    { "input": ["12321"], "expected": true },
+    { "input": ["hello"], "expected": false },
+    { "input": ["php8"], "expected": false },
+    { "input": [""], "expected": true }
+  ],
+  "solution": "<?php\nfunction isPalindrome(string $text): bool\n{\n    $clean = strtolower(preg_replace('/[^a-z0-9]/i', '', $text));\n    return $clean === strrev($clean);\n}\n"
+}

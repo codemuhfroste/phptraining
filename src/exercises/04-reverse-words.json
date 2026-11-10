@@ -1,0 +1,21 @@
+{
+  "id": "04-reverse-words",
+  "title": "Strings: reverse each word",
+  "level": "strings",
+  "prompt": "Write reverseWords(string $sentence): string that reverses the letters of every word but keeps the words in their original order. Words are separated by a single space.\n\n  reverseWords(\"hello world\") → \"olleh dlrow\"\n  reverseWords(\"\") → \"\"",
+  "starterCode": "<?php\n// Exercise 4: Strings\n// Reverse every word, keep the word order.\n\nfunction reverseWords(string $sentence): string\n{\n    // TODO: split into words, reverse each one, join them back\n    return \"\";\n}\n",
+  "functionName": "reverseWords",
+  "hints": [
+    "explode(' ', $sentence) splits a string into an array of words; implode(' ', $words) joins them back.",
+    "strrev() reverses a single string.",
+    "array_map('strrev', $words) applies strrev to every element — no loop needed."
+  ],
+  "tests": [
+    { "input": ["hello world"], "expected": "olleh dlrow" },
+    { "input": ["PHP is fun"], "expected": "PHP si nuf" },
+    { "input": ["Bicol University"], "expected": "lociB ytisrevinU" },
+    { "input": ["a"], "expected": "a" },
+    { "input": [""], "expected": "" }
+  ],
+  "solution": "<?php\nfunction reverseWords(string $sentence): string\n{\n    $words = explode(' ', $sentence);\n    $reversed = array_map('strrev', $words);\n    return implode(' ', $reversed);\n}\n"
+}
